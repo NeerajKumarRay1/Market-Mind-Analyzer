@@ -13,6 +13,7 @@ import {
   ChevronRight,
   Sparkles
 } from 'lucide-react';
+import TradingViewTickerTape from './TradingViewTickerTape';
 
 const LandingPage = ({ onEnterApp }) => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -42,6 +43,11 @@ const LandingPage = ({ onEnterApp }) => {
 
   return (
     <div className="min-h-screen bg-[#050505] text-white overflow-x-hidden">
+      {/* TradingView Ticker Tape - Top of landing page */}
+      <div className="w-full">
+        <TradingViewTickerTape />
+      </div>
+
       {/* Navigation */}
       <motion.nav 
         initial={{ y: -100 }}

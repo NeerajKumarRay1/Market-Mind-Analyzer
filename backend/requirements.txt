@@ -15,6 +15,12 @@ torch==2.0.1
 transformers==4.33.2
 numpy==1.24.3
 
+# Financial data integration - using older compatible version
+yfinance==0.2.12
+fastapi==0.104.1
+uvicorn==0.24.0
+pydantic==2.5.0
+
 # Caching and data processing
 redis==4.6.0
 python-dotenv==1.0.0
@@ -24,6 +30,14 @@ pytest==7.4.2
 hypothesis==6.82.6
 pytest-cov==4.1.0
 
-# Development and utilities
+# Development and utilities - removing eventlet for Python 3.12 compatibility
 python-socketio==5.8.0
-eventlet==0.33.3
+
+# Google Gemini Vision API for portfolio scanning
+google-generativeai==0.3.2
+
+# Salesforce API integration
+simple-salesforce==1.12.4
+
+# File upload handling for FastAPI
+python-multipart==0.0.6

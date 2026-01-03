@@ -41,3 +41,40 @@
 .article-card {
   @apply transition-all duration-200 hover:shadow-lg hover:scale-105;
 }
+
+/* TradingView Widget Styles */
+tv-ticker-tape {
+  width: 100%;
+  height: 50px;
+  display: block;
+}
+
+tv-market-summary {
+  width: 100%;
+  height: auto;
+  display: block;
+  min-height: 400px;
+}
+
+.tradingview-container {
+  width: 100%;
+  overflow: hidden;
+}
+
+/* TradingView Economic Calendar Styles */
+.tradingview-widget-container {
+  width: 100%;
+  height: auto;
+}
+
+.tradingview-widget-container__widget {
+  width: 100%;
+  height: 550px;
+}
+
+.tradingview-widget-copyright {
+  font-size: 12px;
+  text-align: center;
+  margin-top: 8px;
+  padding: 8px;
+}

@@ -1,5 +1,5 @@
 """
-Configuration settings for the Gold Sentiment Analysis application
+Configuration settings for the Investment Research Terminal
 """
 
 import os
@@ -8,35 +8,33 @@ from typing import List
 class Config:
     """Base configuration class"""
     
-    # Flask settings
+    # API settings
     SECRET_KEY = os.environ.get('SECRET_KEY', 'dev-secret-key-change-in-production')
-    DEBUG = os.environ.get('FLASK_DEBUG', 'True').lower() == 'true'
+    DEBUG = os.environ.get('DEBUG', 'True').lower() == 'true'
     
-    # Redis settings
+    # Redis settings (for future caching)
     REDIS_URL = os.environ.get('REDIS_URL', 'redis://localhost:6379/0')
     CACHE_EXPIRATION = int(os.environ.get('CACHE_EXPIRATION', '3600'))  # 1 hour
     
-    # Analysis settings
-    GOLD_QUERIES: List[str] = [
-        "gold market",
-        "gold price", 
-        "gold news",
-        "gold trends",
-        "gold forecast",
-        "gold investment"
-    ]
-    
-    ARTICLES_PER_QUERY = int(os.environ.get('ARTICLES_PER_QUERY', '5'))
+    # Financial data settings
     MAX_WORKERS = int(os.environ.get('MAX_WORKERS', '5'))
     REQUEST_TIMEOUT = int(os.environ.get('REQUEST_TIMEOUT', '10'))
-    MIN_CONTENT_LENGTH = int(os.environ.get('MIN_CONTENT_LENGTH', '100'))
-    
-    # AI Model settings
-    FINBERT_MODEL = "yiyanghkust/finbert-tone"
-    MAX_TEXT_LENGTH = 512
     
     # Performance settings
-    ANALYSIS_TIMEOUT = int(os.environ.get('ANALYSIS_TIMEOUT', '60'))  # 60 seconds
+    DASHBOARD_TIMEOUT = int(os.environ.get('DASHBOARD_TIMEOUT', '3'))  # 3 seconds
+    
+    # Google Gemini API settings for portfolio scanning
+    GOOGLE_API_KEY = os.environ.get('GOOGLE_API_KEY')
+    
+    # Salesforce API settings
+    SALESFORCE_USERNAME = os.environ.get('SALESFORCE_USERNAME')
+    SALESFORCE_PASSWORD = os.environ.get('SALESFORCE_PASSWORD')
+    SALESFORCE_TOKEN = os.environ.get('SALESFORCE_TOKEN')
+    SALESFORCE_DOMAIN = os.environ.get('SALESFORCE_DOMAIN', 'login')
+    
+    # Portfolio scanning settings
+    MAX_FILE_SIZE_MB = int(os.environ.get('MAX_FILE_SIZE_MB', '10'))
+    SUPPORTED_IMAGE_FORMATS = ['image/jpeg', 'image/jpg', 'image/png']
     
 class DevelopmentConfig(Config):
     """Development configuration"""
@@ -49,7 +47,6 @@ class ProductionConfig(Config):
 class TestingConfig(Config):
     """Testing configuration"""
     TESTING = True
-    ARTICLES_PER_QUERY = 2  # Reduced for faster tests
     MAX_WORKERS = 2
 
 # Configuration mapping

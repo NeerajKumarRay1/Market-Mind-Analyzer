@@ -2,16 +2,16 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { 
   Home, 
-  Search, 
   Briefcase, 
-  Newspaper, 
   Settings, 
   LogOut,
   User,
-  ChevronDown
+  ChevronDown,
+  BarChart3
 } from 'lucide-react';
+import TradingViewTickerTape from './TradingViewTickerTape';
 
-const DashboardLayout = ({ children, activeView, onViewChange, onLogout }) => {
+const DashboardLayout = ({ children, activeView, onViewChange, onLogout, user }) => {
   const [riskProfile, setRiskProfile] = useState('Aggressive');
   const [showRiskDropdown, setShowRiskDropdown] = useState(false);
 
@@ -22,18 +22,24 @@ const DashboardLayout = ({ children, activeView, onViewChange, onLogout }) => {
   ];
 
   const navigationItems = [
-    { id: 'dashboard', name: 'Dashboard', icon: Home, description: 'Overview' },
-    { id: 'analyzer', name: 'Analyzer', icon: Search, description: 'Search Tool' },
-    { id: 'portfolio', name: 'Portfolio', icon: Briefcase, description: 'Your Assets' },
-    { id: 'feed', name: 'Market Feed', icon: Newspaper, description: 'Curated News' }
+    { id: 'dashboard', name: 'Market Overview', icon: Home, description: 'Overview' },
+    { id: 'analyzer', name: 'Analyzer', icon: BarChart3, description: 'Sentiment Analysis' },
+    { id: 'portfolio', name: 'Portfolio', icon: Briefcase, description: 'Your Assets' }
   ];
 
   const currentRisk = riskProfiles.find(r => r.name === riskProfile);
 
   return (
-    <div className="min-h-screen bg-[#050505] text-white flex">
-      {/* Fixed Sidebar */}
-      <div className="w-80 bg-gray-900/50 backdrop-blur-xl border-r border-gray-800/50 flex flex-col">
+    <div className="min-h-screen bg-[#050505] text-white flex flex-col">
+      {/* TradingView Ticker Tape - Top of every page */}
+      <div className="w-full">
+        <TradingViewTickerTape />
+      </div>
+
+      {/* Main Layout */}
+      <div className="flex flex-1">
+        {/* Fixed Sidebar */}
+        <div className="w-80 bg-gray-900/50 backdrop-blur-xl border-r border-gray-800/50 flex flex-col">
         {/* User Profile Section */}
         <div className="p-6 border-b border-gray-800/50">
           <div className="flex items-center space-x-4 mb-4">
@@ -41,7 +47,9 @@ const DashboardLayout = ({ children, activeView, onViewChange, onLogout }) => {
               <User className="w-6 h-6 text-black" />
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-white">John Doe</h3>
+              <h3 className="text-lg font-semibold text-white">
+                {user ? `${user.firstName} ${user.lastName}`.trim() : 'User'}
+              </h3>
               <div className="relative">
                 <button
                   onClick={() => setShowRiskDropdown(!showRiskDropdown)}
@@ -140,6 +148,7 @@ const DashboardLayout = ({ children, activeView, onViewChange, onLogout }) => {
         <div className="h-full overflow-y-auto">
           {children}
         </div>
+      </div>
       </div>
     </div>
   );

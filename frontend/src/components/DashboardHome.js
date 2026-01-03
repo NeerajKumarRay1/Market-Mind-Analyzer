@@ -1,251 +1,195 @@
-import React, { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
-import { 
-  TrendingUp, 
-  TrendingDown, 
-  AlertTriangle, 
-  Target,
-  Activity,
-  Brain
-} from 'lucide-react';
+import { useState, useEffect } from 'react';
+import TradingViewMarketSummary from './TradingViewMarketSummary';
+import TradingViewEconomicCalendar from './TradingViewEconomicCalendar';
+import { TrendingUp, TrendingDown, Minus, Calendar, Clock } from 'lucide-react';
 
 const DashboardHome = () => {
-  const [marketMood, setMarketMood] = useState(0.3); // -1 to 1 scale
-  const [portfolioData, setPortfolioData] = useState([
-    { symbol: 'BTC', price: 45000, sentiment: 'bullish', change: '+5.2%', value: '$450,000' },
-    { symbol: 'TSLA', price: 210, sentiment: 'bearish', change: '-3.1%', value: '$21,000' },
-    { symbol: 'NVDA', price: 875, sentiment: 'bullish', change: '+8.7%', value: '$87,500' }
-  ]);
+  const [marketCommentary, setMarketCommentary] = useState(null);
 
-  // Simulate real-time updates
   useEffect(() => {
-    const interval = setInterval(() => {
-      setMarketMood(prev => prev + (Math.random() - 0.5) * 0.1);
-    }, 5000);
-    return () => clearInterval(interval);
+    // Generate dynamic market commentary based on current date
+    const generateMarketCommentary = () => {
+      const today = new Date();
+      const dayOfWeek = today.toLocaleDateString('en-US', { weekday: 'long' });
+      const date = today.toLocaleDateString('en-US', { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      });
+
+      // Generate realistic market movements (this would typically come from an API)
+      const movements = [
+        {
+          index: 'S&P 500',
+          change: (Math.random() * 4 - 2).toFixed(2), // -2% to +2%
+          direction: Math.random() > 0.5 ? 'up' : 'down'
+        },
+        {
+          index: 'NASDAQ',
+          change: (Math.random() * 6 - 3).toFixed(2), // -3% to +3%
+          direction: Math.random() > 0.5 ? 'up' : 'down'
+        },
+        {
+          index: 'Dow Jones',
+          change: (Math.random() * 3 - 1.5).toFixed(2), // -1.5% to +1.5%
+          direction: Math.random() > 0.5 ? 'up' : 'down'
+        }
+      ];
+
+      // Determine overall market sentiment
+      const positiveCount = movements.filter(m => parseFloat(m.change) > 0).length;
+      const overallSentiment = positiveCount >= 2 ? 'positive' : positiveCount === 1 ? 'mixed' : 'negative';
+
+      const sentimentDescriptions = {
+        positive: [
+          "Markets are showing strong momentum today with broad-based gains across major indices.",
+          "Investor optimism is driving markets higher as economic indicators remain supportive.",
+          "Risk-on sentiment prevails as markets advance on positive economic developments."
+        ],
+        mixed: [
+          "Markets are showing mixed performance today with selective sector rotation.",
+          "Trading remains choppy as investors weigh conflicting economic signals.",
+          "Markets are consolidating with divergent performance across different sectors."
+        ],
+        negative: [
+          "Markets are under pressure today as investors remain cautious amid economic uncertainties.",
+          "Risk-off sentiment is weighing on markets with broad-based declines.",
+          "Markets are retreating as concerns over economic headwinds persist."
+        ]
+      };
+
+      const randomDescription = sentimentDescriptions[overallSentiment][
+        Math.floor(Math.random() * sentimentDescriptions[overallSentiment].length)
+      ];
+
+      return {
+        date,
+        dayOfWeek,
+        movements,
+        overallSentiment,
+        description: randomDescription,
+        lastUpdated: today.toLocaleTimeString('en-US', { 
+          hour: '2-digit', 
+          minute: '2-digit',
+          hour12: true 
+        })
+      };
+    };
+
+    setMarketCommentary(generateMarketCommentary());
   }, []);
 
-  const getMoodColor = (mood) => {
-    if (mood > 0.2) return 'text-[#00FF41]';
-    if (mood < -0.2) return 'text-[#FF3131]';
-    return 'text-yellow-400';
-  };
-
-  const getMoodText = (mood) => {
-    if (mood > 0.4) return 'Extreme Greed';
-    if (mood > 0.2) return 'Greed';
-    if (mood > -0.2) return 'Neutral';
-    if (mood > -0.4) return 'Fear';
-    return 'Extreme Fear';
-  };
-
   const getSentimentIcon = (sentiment) => {
-    return sentiment === 'bullish' ? (
-      <TrendingUp className="w-5 h-5 text-[#00FF41]" />
-    ) : (
-      <TrendingDown className="w-5 h-5 text-[#FF3131]" />
-    );
+    switch (sentiment) {
+      case 'positive':
+        return <TrendingUp className="w-5 h-5 text-green-500" />;
+      case 'negative':
+        return <TrendingDown className="w-5 h-5 text-red-500" />;
+      default:
+        return <Minus className="w-5 h-5 text-yellow-500" />;
+    }
+  };
+
+  const getSentimentColor = (sentiment) => {
+    switch (sentiment) {
+      case 'positive':
+        return 'text-green-400 bg-green-500/10 border-green-500/20';
+      case 'negative':
+        return 'text-red-400 bg-red-500/10 border-red-500/20';
+      default:
+        return 'text-yellow-400 bg-yellow-500/10 border-yellow-500/20';
+    }
   };
 
   return (
     <div className="p-8 space-y-8">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-3xl font-bold text-white mb-2">Dashboard</h1>
+        <h1 className="text-3xl font-bold text-white mb-2">Market Overview</h1>
         <p className="text-gray-400">Your daily market briefing</p>
       </div>
 
-      {/* Daily Pulse Section */}
-      <div className="grid lg:grid-cols-2 gap-6 mb-8">
-        {/* Market Mood Card */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="bg-gray-900/50 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6"
-        >
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-xl font-bold text-white">Market Mood</h3>
-            <Activity className="w-6 h-6 text-[#00D4FF]" />
-          </div>
-          
-          {/* Mood Gauge */}
-          <div className="relative mb-6">
-            <div className="w-full h-4 bg-gray-800 rounded-full overflow-hidden">
-              <div className="h-full bg-gradient-to-r from-[#FF3131] via-yellow-400 to-[#00FF41] rounded-full"></div>
-            </div>
-            <div 
-              className="absolute top-0 w-2 h-4 bg-white rounded-full shadow-lg transition-all duration-500"
-              style={{ left: `${((marketMood + 1) / 2) * 100}%`, transform: 'translateX(-50%)' }}
-            ></div>
-          </div>
-
-          <div className="flex justify-between text-sm text-gray-400 mb-4">
-            <span>Fear</span>
-            <span>Neutral</span>
-            <span>Greed</span>
-          </div>
-
-          <div className="text-center">
-            <div className={`text-2xl font-bold ${getMoodColor(marketMood)}`}>
-              {getMoodText(marketMood)}
-            </div>
-            <div className="text-sm text-gray-400 mt-1">
-              S&P 500 & Bitcoin Sentiment
-            </div>
-          </div>
-        </motion.div>
-
-        {/* AI Pick of the Day */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.1 }}
-          className="bg-gray-900/50 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6"
-        >
-          <div className="flex items-center justify-between mb-6">
-            <h3 className="text-xl font-bold text-white">AI Pick of the Day</h3>
-            <Brain className="w-6 h-6 text-[#00FF41]" />
-          </div>
-
-          <div className="space-y-4">
-            <div className="flex items-center space-x-3">
-              <div className="w-12 h-12 bg-gradient-to-r from-[#00FF41]/20 to-[#00D4FF]/20 rounded-xl flex items-center justify-center">
-                <Target className="w-6 h-6 text-[#00FF41]" />
-              </div>
-              <div>
-                <div className="text-lg font-bold text-white">NVIDIA (NVDA)</div>
-                <div className="text-sm text-[#00FF41]">88% Positive Sentiment</div>
-              </div>
-            </div>
-
-            <div className="bg-gray-800/50 rounded-xl p-4">
-              <p className="text-gray-300 text-sm leading-relaxed">
-                <span className="text-[#00FF41] font-semibold">Suggestion:</span> Strong buy signal due to new AI chip announcements. 
-                Sentiment analysis shows overwhelming positive coverage across 247 news sources. 
-                Fits your <span className="text-[#FF3131]">🚀 Aggressive</span> risk strategy.
-              </p>
-            </div>
-
-            <div className="flex items-center justify-between text-sm">
-              <span className="text-gray-400">Confidence Score</span>
-              <span className="text-[#00FF41] font-bold">94%</span>
-            </div>
-          </div>
-        </motion.div>
+      {/* Market Summary - Full Width */}
+      <div className="bg-gray-900/50 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6">
+        <h3 className="text-lg font-bold text-white mb-4">Market Summary</h3>
+        <TradingViewMarketSummary />
       </div>
 
-      {/* Portfolio Health Section */}
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
-        className="space-y-6"
-      >
-        <h2 className="text-2xl font-bold text-white">Portfolio Health</h2>
-        
-        <div className="grid gap-6">
-          {/* Portfolio Table */}
-          <div className="bg-gray-900/50 backdrop-blur-xl border border-gray-700/50 rounded-2xl overflow-hidden">
-            <div className="p-6 border-b border-gray-800/50">
-              <h3 className="text-lg font-bold text-white">Top 3 Movers</h3>
-            </div>
-            
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-gray-800/50">
-                  <tr>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-300">Asset</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-300">Price</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-300">Change</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-300">Sentiment</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold text-gray-300">Value</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {portfolioData.map((asset, index) => (
-                    <motion.tr
-                      key={asset.symbol}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.3 + index * 0.1 }}
-                      className="border-b border-gray-800/30 hover:bg-gray-800/30 transition-colors"
-                    >
-                      <td className="px-6 py-4">
-                        <div className="flex items-center space-x-3">
-                          <div className="w-8 h-8 bg-gradient-to-r from-[#00FF41]/20 to-[#00D4FF]/20 rounded-lg flex items-center justify-center">
-                            <span className="text-xs font-bold text-white">{asset.symbol}</span>
-                          </div>
-                          <span className="font-medium text-white">{asset.symbol}</span>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 text-white font-medium">
-                        ${asset.price.toLocaleString()}
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className={`font-medium ${
-                          asset.change.startsWith('+') ? 'text-[#00FF41]' : 'text-[#FF3131]'
-                        }`}>
-                          {asset.change}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center space-x-2">
-                          {getSentimentIcon(asset.sentiment)}
-                          <span className={`text-sm font-medium ${
-                            asset.sentiment === 'bullish' ? 'text-[#00FF41]' : 'text-[#FF3131]'
-                          }`}>
-                            {asset.sentiment === 'bullish' ? 'Bullish' : 'Bearish'}
-                          </span>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 text-white font-medium">
-                        {asset.value}
-                      </td>
-                    </motion.tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          {/* Alert Box */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            className="bg-gradient-to-r from-[#FF3131]/10 to-[#FF3131]/5 border border-[#FF3131]/30 rounded-2xl p-6"
-          >
-            <div className="flex items-start space-x-4">
-              <div className="w-12 h-12 bg-[#FF3131]/20 rounded-xl flex items-center justify-center flex-shrink-0">
-                <AlertTriangle className="w-6 h-6 text-[#FF3131]" />
-              </div>
-              <div className="flex-1">
-                <h4 className="text-lg font-bold text-white mb-2">⚠️ Action Required</h4>
-                <p className="text-gray-300 mb-4">
-                  TSLA sentiment has flipped negative based on recent supply chain concerns and delivery miss reports. 
-                  Consider reviewing your position or setting a stop-loss.
-                </p>
-                <div className="flex space-x-3">
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="px-4 py-2 bg-[#FF3131] text-white font-semibold rounded-lg hover:bg-[#FF3131]/80 transition-colors"
-                  >
-                    Review Position
-                  </motion.button>
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="px-4 py-2 border border-gray-600 text-gray-300 font-semibold rounded-lg hover:bg-gray-800/50 transition-colors"
-                  >
-                    Dismiss
-                  </motion.button>
+      {/* Market Commentary and Economic Calendar Grid */}
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-8">
+        {/* Left Side - Today's Market Movement (2/3 width) */}
+        <div className="xl:col-span-2">
+          {marketCommentary && (
+            <div className="bg-gray-900/50 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-6">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="text-lg font-bold text-white flex items-center">
+                  {getSentimentIcon(marketCommentary.overallSentiment)}
+                  <span className="ml-2">Today's Market Movement</span>
+                </h3>
+                <div className="flex items-center text-sm text-gray-400">
+                  <Clock className="w-4 h-4 mr-1" />
+                  <span>Updated {marketCommentary.lastUpdated}</span>
                 </div>
               </div>
+
+              {/* Date and Overall Sentiment */}
+              <div className="flex items-center mb-4">
+                <Calendar className="w-4 h-4 text-gray-400 mr-2" />
+                <span className="text-gray-300">{marketCommentary.dayOfWeek}, {marketCommentary.date}</span>
+                <div className={`ml-4 px-3 py-1 rounded-full text-xs font-medium border ${getSentimentColor(marketCommentary.overallSentiment)}`}>
+                  {marketCommentary.overallSentiment.charAt(0).toUpperCase() + marketCommentary.overallSentiment.slice(1)} Sentiment
+                </div>
+              </div>
+
+              {/* Market Description */}
+              <p className="text-gray-300 mb-6 leading-relaxed">
+                {marketCommentary.description}
+              </p>
+
+              {/* Key Index Movements */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {marketCommentary.movements.map((movement, index) => (
+                  <div key={index} className="bg-gray-800/30 rounded-lg p-4">
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-300 font-medium">{movement.index}</span>
+                      <div className={`flex items-center ${
+                        parseFloat(movement.change) > 0 ? 'text-green-400' : 
+                        parseFloat(movement.change) < 0 ? 'text-red-400' : 'text-gray-400'
+                      }`}>
+                        {parseFloat(movement.change) > 0 ? (
+                          <TrendingUp className="w-4 h-4 mr-1" />
+                        ) : parseFloat(movement.change) < 0 ? (
+                          <TrendingDown className="w-4 h-4 mr-1" />
+                        ) : (
+                          <Minus className="w-4 h-4 mr-1" />
+                        )}
+                        <span className="font-semibold">
+                          {parseFloat(movement.change) > 0 ? '+' : ''}{movement.change}%
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Disclaimer */}
+              <div className="mt-4 pt-4 border-t border-gray-700/50">
+                <p className="text-xs text-gray-500">
+                  * Market commentary is generated for demonstration purposes. For real-time analysis, please consult professional financial sources.
+                </p>
+              </div>
             </div>
-          </motion.div>
+          )}
         </div>
-      </motion.div>
+
+        {/* Right Side - Economic Calendar (1/3 width) */}
+        <div className="xl:col-span-1">
+          <div className="bg-gray-900/50 backdrop-blur-xl border border-gray-700/50 rounded-2xl p-4 h-full">
+            <h3 className="text-lg font-bold text-white mb-4">Economic Events</h3>
+            <TradingViewEconomicCalendar />
+          </div>
+        </div>
+      </div>
     </div>
   );
 };

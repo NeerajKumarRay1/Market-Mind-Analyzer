@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Development runner script for Gold Sentiment Analysis
+Development runner script for Investment Research Terminal
 Starts both backend and frontend in development mode
 """
 
@@ -12,11 +12,11 @@ import signal
 from threading import Thread
 
 def run_backend():
-    """Run Flask backend server"""
-    print("🚀 Starting Flask backend...")
+    """Run FastAPI backend server"""
+    print("🚀 Starting FastAPI backend...")
     backend_path = os.path.join(os.getcwd(), 'backend')
     try:
-        subprocess.run([sys.executable, 'app.py'], cwd=backend_path, check=True)
+        subprocess.run([sys.executable, '-m', 'uvicorn', 'fastapi_app:app', '--reload', '--host', '0.0.0.0', '--port', '5000'], cwd=backend_path, check=True)
     except KeyboardInterrupt:
         print("\n🛑 Backend stopped")
     except subprocess.CalledProcessError as e:
@@ -36,7 +36,7 @@ def run_frontend():
 
 def main():
     """Main development runner"""
-    print("🏗️  Gold Sentiment Analysis - Development Mode")
+    print("🏗️  Investment Research Terminal - Development Mode")
     print("=" * 50)
     
     # Check if we're in the right directory
