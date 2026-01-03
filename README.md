@@ -1,164 +1,202 @@
-# MarketMind 🧠📈
+# 🚀 Market Mind Analyzer
 
-**AI-Powered Universal Market Sentiment Analysis Platform**
+A comprehensive financial analysis platform with AI-powered portfolio scanning, Salesforce integration, and real-time market insights.
 
-MarketMind is an institutional-grade sentiment analysis platform that provides real-time insights for stocks, cryptocurrencies, commodities, and other financial instruments. Built with cutting-edge AI models and a professional FinTech interface.
+## ✨ Features
 
-![MarketMind Dashboard](https://img.shields.io/badge/Status-Live-brightgreen) ![Python](https://img.shields.io/badge/Python-3.8+-blue) ![React](https://img.shields.io/badge/React-18+-61DAFB) ![AI Models](https://img.shields.io/badge/AI-VADER%20%2B%20FinBERT-orange)
+### 🔗 **Salesforce Integration**
+- Complete Salesforce API integration with OAuth2 support
+- Real-time data synchronization
+- Configurable connection settings
+- Status monitoring and health checks
 
-## 🚀 Features
+### 📊 **Smart Portfolio Scan**
+- AI-powered portfolio analysis using Google Gemini Vision
+- Upload portfolio screenshots for instant analysis
+- Investment recommendations and insights
+- Holdings extraction and validation
 
-### 🔍 Universal Asset Analysis
-- **Multi-Asset Support**: Stocks, Crypto, Commodities, Real Estate, Forex
-- **Real-Time Processing**: Live news aggregation and sentiment analysis
-- **AI-Powered Insights**: VADER + FinBERT models for comprehensive analysis
+### 📱 **Modern Dashboard**
+- Interactive React-based interface
+- TradingView widgets integration
+- Real-time market data and charts
+- Responsive design for all devices
 
-### 💼 Professional Dashboard
-- **Institutional Design**: Dark theme with glassmorphism effects
-- **Interactive Analytics**: Real-time sentiment scores and confidence metrics
-- **Market Signals**: Bullish/Bearish/Neutral recommendations
-- **Source Analysis**: Detailed breakdown of news sources and impact ratings
+### 🔐 **User Management**
+- Secure login and signup system
+- User session management
+- Protected routes and authentication
 
-### 🎯 Smart Features
-- **Auto-Categorization**: Intelligent asset type detection
-- **Risk Assessment**: Confidence scoring for analysis reliability
-- **Historical Context**: Trend analysis and market mood indicators
-- **Export Ready**: Professional reports for institutional use
+### 📈 **Market Analysis**
+- Real-time market data
+- Economic calendar integration
+- Ticker tape with live prices
+- Sentiment analysis tools
 
-## 🏗️ Architecture
+## 🛠️ Tech Stack
 
-```
-MarketMind/
-├── backend/                 # Flask API Server
-│   ├── models/             # Data models (Article, AnalysisReport)
-│   ├── services/           # Core services (NewsAggregator, SentimentEngine)
-│   ├── api/               # API endpoints
-│   └── app.py             # Main Flask application
-├── frontend/               # React Dashboard
-│   ├── src/components/    # UI components
-│   ├── src/App.js        # Main React app
-│   └── tailwind.config.js # Styling configuration
-└── run_dev.py             # Development server launcher
-```
+### Backend
+- **FastAPI** - High-performance Python web framework
+- **Google Gemini Vision** - AI-powered image analysis
+- **Salesforce API** - CRM integration
+- **Python 3.12** - Modern Python features
 
-## 🛠️ Technology Stack
+### Frontend
+- **React 18** - Modern React with hooks
+- **Tailwind CSS** - Utility-first styling
+- **TradingView Widgets** - Professional market charts
+- **Axios** - HTTP client for API calls
 
-**Backend:**
-- **Flask**: Web framework and API server
-- **VADER**: Rule-based sentiment analysis
-- **FinBERT**: Financial domain-specific BERT model
-- **Trafilatura**: News content extraction
-- **Requests**: HTTP client for news aggregation
-
-**Frontend:**
-- **React 18**: Modern UI framework
-- **Tailwind CSS**: Utility-first styling
-- **Framer Motion**: Smooth animations
-- **Lucide React**: Professional icons
-
-**AI Models:**
-- **VADER**: Real-time sentiment scoring
-- **FinBERT**: Financial context understanding
-- **Multi-model Ensemble**: Enhanced accuracy through model combination
+### Database & Storage
+- **Local Storage** - Client-side data persistence
+- **Salesforce** - Cloud-based CRM storage
 
 ## 🚀 Quick Start
 
 ### Prerequisites
-- Python 3.8+
-- Node.js 16+
+- Python 3.12+
+- Node.js 18+
 - npm or yarn
+- Google Gemini API key
+- Salesforce credentials (optional)
 
 ### Installation
 
 1. **Clone the repository**
 ```bash
-git clone https://github.com/NeerajKumarRay1/market-mind.git
-cd market-mind
+git clone https://github.com/NeerajKumarRay1/Market-Mind-Analyzer.git
+cd Market-Mind-Analyzer
 ```
 
-2. **Install Python dependencies**
+2. **Backend Setup**
 ```bash
-pip install -r backend/requirements.txt
+cd backend
+pip install -r requirements.txt
 ```
 
-3. **Install Node.js dependencies**
+3. **Frontend Setup**
 ```bash
 cd frontend
 npm install
-cd ..
 ```
 
-4. **Start the application**
+4. **Environment Configuration**
+```bash
+# Copy the example environment file
+cp backend/.env.example backend/.env
+
+# Edit the .env file with your credentials
+# Required:
+GOOGLE_API_KEY=your-google-gemini-api-key
+
+# Optional (for Salesforce integration):
+SALESFORCE_USERNAME=your-username@domain.com
+SALESFORCE_PASSWORD=your-password
+SALESFORCE_TOKEN=your-security-token
+SALESFORCE_DOMAIN=login
+```
+
+### Running the Application
+
+**Option 1: Use the development runner (Recommended)**
 ```bash
 python run_dev.py
 ```
 
-5. **Access the platform**
-- **Frontend**: http://localhost:3001
-- **Backend API**: http://localhost:5000
-- **Health Check**: http://localhost:5000/api/health
+**Option 2: Run services separately**
 
-## 📊 API Endpoints
-
-### Analysis Endpoints
-- `POST /api/analysis/start` - Start sentiment analysis
-- `GET /api/analysis/latest` - Get cached results
-- `GET /api/health` - System health check
-
-### Search Endpoints
-- `GET /api/search/suggestions` - Get popular search suggestions
-- `GET /api/test` - Test backend connectivity
-
-### Example API Usage
-```javascript
-// Start analysis
-const response = await fetch('/api/analysis/start', {
-  method: 'POST',
-  headers: { 'Content-Type': 'application/json' },
-  body: JSON.stringify({
-    query: 'Tesla',
-    category: 'stock'
-  })
-});
-
-const analysis = await response.json();
-console.log(analysis.market_signal); // BULLISH, BEARISH, or NEUTRAL
+Backend:
+```bash
+cd backend
+python -m uvicorn fastapi_app:app --reload --host 0.0.0.0 --port 5000
 ```
 
-## 🎨 Design System
+Frontend:
+```bash
+cd frontend
+npm start
+```
 
-**Color Palette:**
-- **Background**: `#050505` (Deep Black)
-- **Success/Bullish**: `#00FF41` (Neon Green)
-- **Danger/Bearish**: `#FF3131` (Alert Red)
-- **Info/Neutral**: `#00D4FF` (Cyber Blue)
-- **Text**: `#FFFFFF` / `#9CA3AF` (White/Gray)
+The application will be available at:
+- Frontend: http://localhost:3000
+- Backend API: http://localhost:5000
+- API Documentation: http://localhost:5000/docs
 
-**Typography:**
-- **Primary**: Inter/Geist (Modern Sans-serif)
-- **Weights**: 400 (Regular), 600 (Semibold), 700 (Bold)
+## 📋 API Endpoints
+
+### Health & Status
+- `GET /api/health` - System health check
+- `GET /api/test-connection` - Test frontend-backend connection
+- `GET /api/salesforce/status` - Salesforce connection status
+
+### Portfolio Analysis
+- `POST /api/portfolio/analyze-image` - Upload and analyze portfolio screenshots
 
 ## 🔧 Configuration
 
 ### Environment Variables
-Create a `.env` file in the backend directory:
-```env
-SECRET_KEY=your-secret-key
-NEWS_API_KEY=your-news-api-key (optional)
-REDIS_URL=redis://localhost:6379 (optional)
+
+| Variable | Description | Required |
+|----------|-------------|----------|
+| `GOOGLE_API_KEY` | Google Gemini Vision API key | Yes |
+| `SALESFORCE_USERNAME` | Salesforce username | No |
+| `SALESFORCE_PASSWORD` | Salesforce password | No |
+| `SALESFORCE_TOKEN` | Salesforce security token | No |
+| `SALESFORCE_DOMAIN` | Salesforce domain (usually 'login') | No |
+
+### Salesforce Setup
+
+To enable Salesforce integration:
+
+1. **Enable API Access**
+   - Go to Setup → API → API Access
+   - Enable "Allow API Access"
+
+2. **Get Security Token**
+   - Go to Personal Settings → Reset My Security Token
+   - Check your email for the token
+
+3. **Update Environment Variables**
+   - Add your credentials to the `.env` file
+
+## 🧪 Testing
+
+### Backend Tests
+```bash
+cd backend
+python test_salesforce.py  # Test Salesforce connection
+python -m pytest           # Run all tests
 ```
 
-### Model Configuration
-The platform automatically downloads and caches AI models on first run:
-- **VADER**: Built-in with NLTK
-- **FinBERT**: `yiyanghkust/finbert-tone` from Hugging Face
+### Frontend Tests
+```bash
+cd frontend
+npm test
+```
 
-## 📈 Performance
+## 📁 Project Structure
 
-- **Analysis Speed**: ~2-5 seconds per query
-- **Model Accuracy**: 85%+ on financial sentiment
-- **Concurrent Users**: Supports 100+ simultaneous analyses
-- **Memory Usage**: ~2GB RAM (with models loaded)
+```
+Market-Mind-Analyzer/
+├── backend/
+│   ├── models/           # Data models
+│   ├── .env.example      # Environment template
+│   ├── config.py         # Configuration management
+│   ├── fastapi_app.py    # Main FastAPI application
+│   ├── salesforce_service.py  # Salesforce integration
+│   ├── vision_engine.py  # Google Gemini Vision
+│   └── requirements.txt  # Python dependencies
+├── frontend/
+│   ├── src/
+│   │   ├── components/   # React components
+│   │   ├── App.js        # Main React app
+│   │   └── index.js      # Entry point
+│   ├── package.json      # Node.js dependencies
+│   └── tailwind.config.js # Tailwind configuration
+├── .kiro/specs/          # Feature specifications
+├── run_dev.py            # Development runner
+└── README.md             # This file
+```
 
 ## 🤝 Contributing
 
@@ -172,19 +210,21 @@ The platform automatically downloads and caches AI models on first run:
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
+## 🆘 Support
+
+If you encounter any issues:
+
+1. Check the [Issues](https://github.com/NeerajKumarRay1/Market-Mind-Analyzer/issues) page
+2. Create a new issue with detailed information
+3. Include error messages and steps to reproduce
+
 ## 🙏 Acknowledgments
 
-- **Hugging Face** for FinBERT model
-- **NLTK** for VADER sentiment analysis
-- **React Team** for the amazing framework
-- **Tailwind CSS** for utility-first styling
-
-## 📞 Support
-
-For support, email neerajkumarray1@gmail.com or create an issue on GitHub.
+- Google Gemini Vision for AI-powered analysis
+- TradingView for market data widgets
+- Salesforce for CRM integration
+- FastAPI and React communities
 
 ---
 
-**Built with ❤️ by [Neeraj Kumar Ray](https://github.com/NeerajKumarRay1)**
-
-*MarketMind - Where AI meets Finance* 🚀
+**Made with ❤️ by [NeerajKumarRay1](https://github.com/NeerajKumarRay1)**
